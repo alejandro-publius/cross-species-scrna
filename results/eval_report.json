@@ -1,50 +1,50 @@
 {
   "label_transfer": {
     "PCA (unintegrated baseline)": {
-      "accuracy": 0.848,
-      "balanced_acc": 0.632,
-      "shuffled_accuracy": 0.484,
-      "shuffled_balanced_acc": 0.171
+      "accuracy": 0.877,
+      "balanced_acc": 0.752,
+      "shuffled_accuracy": 0.423,
+      "shuffled_balanced_acc": 0.14
     },
     "scVI (integrated)": {
-      "accuracy": 0.942,
-      "balanced_acc": 0.86,
-      "shuffled_accuracy": 0.279,
-      "shuffled_balanced_acc": 0.11
+      "accuracy": 0.965,
+      "balanced_acc": 0.903,
+      "shuffled_accuracy": 0.277,
+      "shuffled_balanced_acc": 0.103
     }
   },
   "scib": [
     {
       "Embedding": "X_pca",
-      "Isolated labels": 0.7507159114,
-      "KMeans NMI": 0.7862446028,
-      "KMeans ARI": 0.724921123,
-      "Silhouette label": 0.5846628547,
+      "Isolated labels": 0.7457152009,
+      "KMeans NMI": 0.7781812071,
+      "KMeans ARI": 0.6477418249,
+      "Silhouette label": 0.5966494083,
       "cLISI": 1.0,
-      "BRAS": 0.5187402368,
+      "BRAS": 0.517947197,
       "iLISI": 0.0,
-      "KBET": 0.1268809608,
-      "Graph connectivity": 0.7720068302,
+      "KBET": 0.1318085482,
+      "Graph connectivity": 0.7750251119,
       "PCR comparison": 0.0,
-      "Batch correction": 0.2835256055,
-      "Bio conservation": 0.7693089485,
-      "Total": 0.5749956113
+      "Batch correction": 0.2849561714,
+      "Bio conservation": 0.7536575317,
+      "Total": 0.5661769876
     },
     {
       "Embedding": "X_scVI",
-      "Isolated labels": 0.6843493581,
-      "KMeans NMI": 0.8316377306,
-      "KMeans ARI": 0.741041528,
-      "Silhouette label": 0.60742414,
+      "Isolated labels": 0.6956045032,
+      "KMeans NMI": 0.790262609,
+      "KMeans ARI": 0.6161034171,
+      "Silhouette label": 0.6094433069,
       "cLISI": 1.0,
-      "BRAS": 0.7008382082,
-      "iLISI": 0.003172636,
-      "KBET": 0.1798364916,
-      "Graph connectivity": 0.9750966896,
-      "PCR comparison": 0.9080218654,
-      "Batch correction": 0.5533931782,
-      "Bio conservation": 0.7728905678,
-      "Total": 0.6850916119
+      "BRAS": 0.7499597073,
+      "iLISI": 0.0030741692,
+      "KBET": 0.1626030635,
+      "Graph connectivity": 0.9720043191,
+      "PCR comparison": 0.919276224,
+      "Batch correction": 0.5613834966,
+      "Bio conservation": 0.7422827721,
+      "Total": 0.6699230619
     },
     {
       "Embedding": "Metric Type",
@@ -66,38 +66,38 @@
   "conserved_table": [
     {
       "cell_type": "beta",
-      "n_conserved": 20,
-      "n_human_specific": 30,
-      "n_mouse_specific": 30,
-      "jaccard": 0.25
+      "n_conserved": 19,
+      "n_human_specific": 31,
+      "n_mouse_specific": 31,
+      "jaccard": 0.235
     },
     {
       "cell_type": "alpha",
+      "n_conserved": 17,
+      "n_human_specific": 33,
+      "n_mouse_specific": 33,
+      "jaccard": 0.205
+    },
+    {
+      "cell_type": "delta",
       "n_conserved": 16,
       "n_human_specific": 34,
       "n_mouse_specific": 34,
       "jaccard": 0.19
     },
     {
-      "cell_type": "delta",
-      "n_conserved": 15,
-      "n_human_specific": 35,
-      "n_mouse_specific": 35,
-      "jaccard": 0.176
-    },
-    {
       "cell_type": "gamma",
-      "n_conserved": 11,
-      "n_human_specific": 39,
-      "n_mouse_specific": 39,
-      "jaccard": 0.124
+      "n_conserved": 13,
+      "n_human_specific": 37,
+      "n_mouse_specific": 37,
+      "jaccard": 0.149
     },
     {
       "cell_type": "ductal",
-      "n_conserved": 15,
-      "n_human_specific": 35,
-      "n_mouse_specific": 35,
-      "jaccard": 0.176
+      "n_conserved": 17,
+      "n_human_specific": 33,
+      "n_mouse_specific": 33,
+      "jaccard": 0.205
     },
     {
       "cell_type": "endothelial",
@@ -122,10 +122,10 @@
     },
     {
       "cell_type": "macrophage",
-      "n_conserved": 23,
-      "n_human_specific": 27,
-      "n_mouse_specific": 27,
-      "jaccard": 0.299
+      "n_conserved": 25,
+      "n_human_specific": 25,
+      "n_mouse_specific": 25,
+      "jaccard": 0.333
     }
   ],
   "conserved_examples": {
@@ -135,8 +135,8 @@
         "CHGA",
         "DNAJB9",
         "G6PC2",
+        "GJD2",
         "HADH",
-        "HSPA5",
         "IAPP",
         "INSM1",
         "MEG3",
@@ -151,12 +151,12 @@
         "DNAJC12",
         "EEF1A2",
         "ELMO1",
-        "FTL",
         "FXYD2",
         "GAD2",
-        "GNAS",
         "GSN",
-        "HOPX"
+        "HOPX",
+        "IGF2",
+        "METRN"
       ],
       "mouse_specific": [
         "ANKH",
@@ -165,12 +165,12 @@
         "BNIP3",
         "C2CD4B",
         "CHGB",
-        "CTSB",
+        "DDC",
+        "DNAJC24",
         "ENTPD3",
         "GCH1",
-        "GJD2",
         "GNG12",
-        "GSDMA"
+        "HSPA5"
       ]
     },
     "alpha": {
@@ -181,15 +181,14 @@
         "FEV",
         "GADD45G",
         "GC",
-        "GCG",
         "GPX3",
         "HIGD1A",
         "IRX2",
         "MAFB",
+        "NPC2",
         "PCSK2"
       ],
       "human_specific": [
-        "ALDH1A1",
         "B2M",
         "C2CD4B",
         "CALY",
@@ -198,18 +197,19 @@
         "CHGB",
         "CLU",
         "COTL1",
+        "CRIP2",
         "EZR",
         "F10",
-        "FAP"
+        "FXYD3"
       ],
       "mouse_specific": [
         "ACE2",
         "BASP1",
+        "CAMK2B",
         "EDN3",
         "EEF1A2",
         "ETV1",
         "FGL2",
-        "GNAS",
         "ID1",
         "ID2",
         "ID3",
@@ -223,28 +223,28 @@
         "CAMK2B",
         "CHGB",
         "EGR1",
-        "FRZB",
+        "GCH1",
         "GPX3",
         "HHEX",
         "ISL1",
         "LY6H",
         "MEST",
-        "PCP4",
-        "PEG10"
+        "PAK3",
+        "PCP4"
       ],
       "human_specific": [
-        "ADGRL2",
-        "ANK1",
         "AQP3",
-        "ASB4",
+        "ARG2",
         "BCHE",
         "BMP5",
-        "CALB1",
         "CALY",
         "CBLN4",
         "CD9",
         "ECEL1",
-        "EDN3"
+        "EDN3",
+        "GAD2",
+        "INSM1",
+        "KCNJ8"
       ],
       "mouse_specific": [
         "ABCC8",

@@ -1,10 +1,10 @@
 cell_type,n_conserved,n_human_specific,n_mouse_specific,jaccard
-beta,20,30,30,0.25
-alpha,16,34,34,0.19
-delta,15,35,35,0.176
-gamma,11,39,39,0.124
-ductal,15,35,35,0.176
+beta,19,31,31,0.235
+alpha,17,33,33,0.205
+delta,16,34,34,0.19
+gamma,13,37,37,0.149
+ductal,17,33,33,0.205
 endothelial,22,28,28,0.282
 quiescent_stellate,17,33,33,0.205
 activated_stellate,21,29,29,0.266
-macrophage,23,27,27,0.299
+macrophage,25,25,25,0.333

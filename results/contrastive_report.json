@@ -1,8 +1,8 @@
 {
   "contrastive_label_transfer": {
-    "accuracy": 0.937,
-    "balanced_acc": 0.919,
-    "shuffled_accuracy": 0.307,
-    "shuffled_balanced_acc": 0.113
+    "accuracy": 0.94,
+    "balanced_acc": 0.911,
+    "shuffled_accuracy": 0.241,
+    "shuffled_balanced_acc": 0.079
   }
 }

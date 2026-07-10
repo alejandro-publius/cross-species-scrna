@@ -23,8 +23,9 @@ def get_data():
     sc.pp.highly_variable_genes(
         a, flavor="seurat_v3", n_top_genes=N_HVG, batch_key="species", layer="counts"
     )
-    a = a[:, a.var["highly_variable"]].copy()
-    # log-normalize X for encoder input; counts layer stays raw
+    # Normalize on the FULL gene set so each cell's size factor reflects its total counts,
+    # THEN subset to HVG. (Normalizing after subsetting would use HVG-only totals -- wrong.)
     sc.pp.normalize_total(a, target_sum=1e4)
     sc.pp.log1p(a)
+    a = a[:, a.var["highly_variable"]].copy()
     return a

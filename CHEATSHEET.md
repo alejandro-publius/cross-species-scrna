@@ -9,9 +9,9 @@ Adapt to your own voice — and read `SUMMARY.md` once so the story is yours, no
 > programs. I mapped the two genomes to a 12k one-to-one ortholog space, built a
 > negative-binomial VAE from scratch in PyTorch to make sure I understood the architecture,
 > then used scVI with species as the batch covariate for the real integration. It lifted
-> human→mouse label-transfer balanced accuracy from 0.63 with a PCA baseline to 0.86, roughly
-> doubled the species-mixing score while holding cell-type separation, and a label-shuffle
-> control collapsed it to chance — so the signal is real.
+> human→mouse label-transfer balanced accuracy from 0.75 with a PCA baseline to 0.90, roughly
+> doubled the scib batch-correction aggregate (0.28→0.56) while holding cell-type separation, and
+> a label-shuffle control collapsed it to chance — so the signal is real.
 
 ---
 
@@ -45,7 +45,9 @@ a batch-specific offset. When I declare species the batch, I'm telling the model
 tracks perfectly with species is nuisance — absorb it into the batch offset, not into z. What
 survives in z is variation *not* explained by species, i.e. shared biology. So a human beta cell
 and a mouse beta cell, stripped of their species offset, land in the same region of z. The scib
-numbers confirm it: species-mixing jumped 0.28→0.55 while bio-conservation held at ~0.77.
+batch-correction aggregate jumped 0.28→0.56 while bio-conservation held (~0.75→0.74). Caveat I'd
+volunteer: the *local* mixing metrics (iLISI, kBET) stayed low, so integration is global, not
+perfectly interspersed cell-by-cell — honest, and consistent with real species differences.
 
 ### Q: How would you know from the UMAP whether integration worked or failed?
 Two-color test. Color by **species**: I want the two colors interleaved *within* each cluster —
@@ -56,23 +58,27 @@ scib-metrics quantifies exactly that tension (batch correction vs bio-conservati
 
 ### Q: What does one-to-one ortholog restriction throw away, and how does it bias conserved-vs-specific?
 It throws away many-to-many families — gene duplications where one human gene maps to several
-mouse genes or vice versa (immune genes, some receptors). The bias: a gene with no 1:1 partner
-is simply *absent* from my feature space, so I can never call it species-specific — it's
-invisible, not classified. So my "species-specific" list is conditioned on "had a clean 1:1
-ortholog and was measured in both." I'd caveat any conserved/specific claim with that.
+mouse genes or vice versa. **The killer concrete example in my own data: `INS` (insulin).** Human
+INS is a one-to-many co-ortholog of mouse `Ins1`/`Ins2`, so strict 1:1 *drops insulin entirely* —
+the single most important beta-cell gene is absent from my shared space. The bias: a gene with no
+1:1 partner is invisible, so I can never call it species-specific — it's excluded, not classified.
+So my "species-specific" list is conditioned on "had a clean 1:1 ortholog and was measured in
+both." The honest fix if I needed INS is to *aggregate* the mouse paralogs (sum Ins1+Ins2) into
+the human ortholog rather than pick one arbitrarily — I chose to exclude, and I'd say so plainly.
 
 ### Q: Batch-mixing vs bio-conservation trade off. How do you read it, where did yours land?
 They pull against each other: maximize mixing and you can blend distinct cell types together
 (false conservation); maximize bio-conservation and you can leave species unmixed (no
-integration). I read them jointly, never one alone. Mine: PCA baseline was 0.28 mixing / 0.77
-bio; scVI moved to 0.55 mixing / 0.77 bio. So I bought a large mixing gain at **no**
-bio-conservation cost — that's the good corner of the trade. If mixing had climbed while bio
-fell, I'd have suspected over-correction.
+integration). I read them jointly, never one alone. The local-mixing metrics (iLISI/kBET) stayed modest, so I wouldn't claim "perfectly mixed."
+Mine: PCA baseline was 0.28 batch-correction / 0.75
+bio; scVI moved to 0.56 batch-correction / 0.74 bio. So I roughly doubled the aggregate at only a
+tiny bio cost — the good corner of the trade. That aggregate gain is driven by graph-connectivity
+and PCR, not by local mixing. If mixing had climbed while bio fell sharply, I'd suspect over-correction.
 
-### Q: Your human→mouse label-transfer balanced accuracy is 0.86. Why not higher, what next?
+### Q: Your human→mouse label-transfer balanced accuracy is 0.90. Why not higher, what next?
 Two reasons it's not higher. First, **rare types** — schwann and macrophage have a handful of
 mouse cells, and balanced accuracy weights them equally with beta, so a few misses hurt a lot
-(raw accuracy is 0.94; the gap *is* the rare-type penalty). Second, genuine **species
+(raw accuracy is 0.965; the gap *is* the rare-type penalty). Second, genuine **species
 divergence** in some programs — not everything is conserved, which is the whole point of the
 project. Next I'd: (1) add a **supervised contrastive** loss to explicitly pull homologous
 types together, (2) use scANVI to inject the human labels during training, (3) get more mouse
@@ -80,17 +86,17 @@ cells for the rare types. I'd also report per-type accuracy, not just the aggreg
 
 ### Q: You already know PCA + kNN. Why bother with scVI — what did it buy you, and by how much?
 This is the honest baseline I ran precisely so scVI had to earn its place. On the *same* shared
-ortholog matrix, PCA+kNN got 0.63 balanced label-transfer accuracy and only 0.28 species mixing.
-scVI took those to 0.86 and 0.55. So the deep model bought +0.23 balanced accuracy and ~2×
-mixing — because PCA is linear and models no batch structure, so species differences sit right
+ortholog matrix, PCA+kNN got 0.75 balanced label-transfer accuracy and only 0.28 batch-correction.
+scVI took those to 0.90 and 0.56. So the deep model bought +0.15 balanced accuracy and ~2× the
+batch-correction aggregate — because PCA is linear and models no batch structure, so species differences sit right
 in the top components; scVI has an explicit batch term and a count-appropriate likelihood. If
 scVI *hadn't* beaten PCA I'd have said so and used PCA — "I ran a library" isn't a result.
 
 ### Q: How do you know the metrics aren't measuring noise? (negative control)
 I ran a label-shuffle control: permute the human training labels, breaking the
 expression↔label link, and redo label transfer. If my pipeline were leaking or the metric were
-gameable, accuracy would stay high. It didn't — it collapsed to 0.11 balanced (≈ chance for 11
-types). That tells me the 0.86 is coming from real structure in the latent space, not from a
+gameable, accuracy would stay high. It didn't — it collapsed to ~0.10 balanced (≈ chance for the
+10 cell types present in mouse). That tells me the 0.90 is coming from real structure, not from a
 bug. It's the same sanity instinct as a permutation test in my prior bootstrap work.
 
 ### Q: How is this different from your bulk / microbiome ML, and why does single-cell need deep learning?
@@ -116,9 +122,9 @@ The VAE is generative and unsupervised — it reconstructs counts and regularize
 cross-species alignment is a *side effect* of removing the species batch term. Supervised
 contrastive is discriminative metric learning — for each cell it pulls same-cell-type cells
 together and pushes other types apart, directly shaping the geometry by label. On human→mouse
-transfer the ladder was: PCA 0.63 → scVI 0.86 (unsupervised) → contrastive 0.92 balanced
+transfer the ladder was: PCA 0.75 → scVI 0.90 (unsupervised) → contrastive 0.91 balanced
 accuracy. But I'd stress the asymmetry: contrastive *used human labels*, scVI used none — so
-"contrastive wins" is only fair given labels; scVI's 0.86 with zero supervision is arguably the
+the 0.91-vs-0.90 edge is only fair given labels; scVI's 0.90 with zero supervision is arguably the
 more impressive result, and it's also generative (I can sample/impute), which contrastive isn't.
 
 ### Q: (the one to volunteer) Tell me about a bug or mistake in your own analysis.
@@ -126,14 +132,12 @@ My first contrastive run scored a *perfect* 1.00 on human→mouse label transfer
 flag, not a win — I'd trained the contrastive loss on every cell's label including the mouse
 cells, then "evaluated" on those same mouse labels. Textbook **label leakage**: the model was
 shown the answers. I caught it because 1.00 is implausible, retrained supervising on **human
-cells only** with mouse fully held out, and got an honest 0.92 balanced. The negative control
+cells only** with mouse fully held out, and got an honest 0.91 balanced. The negative control
 (label shuffle → chance) is exactly the tripwire that would have caught it if I hadn't. I'd
-rather report 0.92 I can defend than 1.00 I can't.
+rather report 0.91 I can defend than 1.00 I can't.
 
 ---
 
-### The eligibility question (be ready, answer calmly)
-The JD asks for enrolled Master's/PhD students; you're a CS senior. Don't hide it. If it comes
-up: *"I'm finishing my BS and applying to [grad plans]; I built this project specifically to
-show I can do the department's actual work now."* Then pivot to the project. Whether to apply
-despite the gap is a strategy call — worth a separate conversation, not something to fake.
+### Eligibility
+You're an enrolled Master's student at UC Berkeley — you **meet** the JD's Master's/PhD
+requirement. No workaround needed: state it plainly and let the project carry the conversation.

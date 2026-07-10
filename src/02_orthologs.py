@@ -51,8 +51,10 @@ def main():
 
     hset, mset = set(human.var_names), set(mouse.var_names)
     keep = pairs[pairs["human"].isin(hset) & pairs["mouse"].isin(mset)].copy()
-    # guard against duplicate symbols collapsing the space
-    keep = keep.drop_duplicates(subset="human").drop_duplicates(subset="mouse")
+    # STRICT 1:1 -- drop ANY symbol that appears more than once on either side (keep=False),
+    # instead of arbitrarily keeping the first. A symbol with multiple partners is not
+    # one-to-one, so it is excluded entirely rather than silently resolved.
+    keep = keep.drop_duplicates(subset="human", keep=False).drop_duplicates(subset="mouse", keep=False)
     print(f"1:1 orthologs measured in BOTH datasets: {len(keep)}")
 
     # --- the case-trap sanity guard: a real ortholog space is thousands, not tens ---
