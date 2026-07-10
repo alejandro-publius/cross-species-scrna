@@ -1,0 +1,265 @@
+{
+  "label_transfer": {
+    "PCA (unintegrated baseline)": {
+      "accuracy": 0.848,
+      "balanced_acc": 0.632,
+      "shuffled_accuracy": 0.484,
+      "shuffled_balanced_acc": 0.171
+    },
+    "scVI (integrated)": {
+      "accuracy": 0.942,
+      "balanced_acc": 0.86,
+      "shuffled_accuracy": 0.279,
+      "shuffled_balanced_acc": 0.11
+    }
+  },
+  "scib": [
+    {
+      "Embedding": "X_pca",
+      "Isolated labels": 0.7507159114,
+      "KMeans NMI": 0.7862446028,
+      "KMeans ARI": 0.724921123,
+      "Silhouette label": 0.5846628547,
+      "cLISI": 1.0,
+      "BRAS": 0.5187402368,
+      "iLISI": 0.0,
+      "KBET": 0.1268809608,
+      "Graph connectivity": 0.7720068302,
+      "PCR comparison": 0.0,
+      "Batch correction": 0.2835256055,
+      "Bio conservation": 0.7693089485,
+      "Total": 0.5749956113
+    },
+    {
+      "Embedding": "X_scVI",
+      "Isolated labels": 0.6843493581,
+      "KMeans NMI": 0.8316377306,
+      "KMeans ARI": 0.741041528,
+      "Silhouette label": 0.60742414,
+      "cLISI": 1.0,
+      "BRAS": 0.7008382082,
+      "iLISI": 0.003172636,
+      "KBET": 0.1798364916,
+      "Graph connectivity": 0.9750966896,
+      "PCR comparison": 0.9080218654,
+      "Batch correction": 0.5533931782,
+      "Bio conservation": 0.7728905678,
+      "Total": 0.6850916119
+    },
+    {
+      "Embedding": "Metric Type",
+      "Isolated labels": "Bio conservation",
+      "KMeans NMI": "Bio conservation",
+      "KMeans ARI": "Bio conservation",
+      "Silhouette label": "Bio conservation",
+      "cLISI": "Bio conservation",
+      "BRAS": "Batch correction",
+      "iLISI": "Batch correction",
+      "KBET": "Batch correction",
+      "Graph connectivity": "Batch correction",
+      "PCR comparison": "Batch correction",
+      "Batch correction": "Aggregate score",
+      "Bio conservation": "Aggregate score",
+      "Total": "Aggregate score"
+    }
+  ],
+  "conserved_table": [
+    {
+      "cell_type": "beta",
+      "n_conserved": 20,
+      "n_human_specific": 30,
+      "n_mouse_specific": 30,
+      "jaccard": 0.25
+    },
+    {
+      "cell_type": "alpha",
+      "n_conserved": 16,
+      "n_human_specific": 34,
+      "n_mouse_specific": 34,
+      "jaccard": 0.19
+    },
+    {
+      "cell_type": "delta",
+      "n_conserved": 15,
+      "n_human_specific": 35,
+      "n_mouse_specific": 35,
+      "jaccard": 0.176
+    },
+    {
+      "cell_type": "gamma",
+      "n_conserved": 11,
+      "n_human_specific": 39,
+      "n_mouse_specific": 39,
+      "jaccard": 0.124
+    },
+    {
+      "cell_type": "ductal",
+      "n_conserved": 15,
+      "n_human_specific": 35,
+      "n_mouse_specific": 35,
+      "jaccard": 0.176
+    },
+    {
+      "cell_type": "endothelial",
+      "n_conserved": 22,
+      "n_human_specific": 28,
+      "n_mouse_specific": 28,
+      "jaccard": 0.282
+    },
+    {
+      "cell_type": "quiescent_stellate",
+      "n_conserved": 17,
+      "n_human_specific": 33,
+      "n_mouse_specific": 33,
+      "jaccard": 0.205
+    },
+    {
+      "cell_type": "activated_stellate",
+      "n_conserved": 21,
+      "n_human_specific": 29,
+      "n_mouse_specific": 29,
+      "jaccard": 0.266
+    },
+    {
+      "cell_type": "macrophage",
+      "n_conserved": 23,
+      "n_human_specific": 27,
+      "n_mouse_specific": 27,
+      "jaccard": 0.299
+    }
+  ],
+  "conserved_examples": {
+    "beta": {
+      "conserved": [
+        "ABCC8",
+        "CHGA",
+        "DNAJB9",
+        "G6PC2",
+        "HADH",
+        "HSPA5",
+        "IAPP",
+        "INSM1",
+        "MEG3",
+        "NEUROD1",
+        "NKX6-1",
+        "PAPSS2"
+      ],
+      "human_specific": [
+        "CADM1",
+        "CDKN1C",
+        "DLK1",
+        "DNAJC12",
+        "EEF1A2",
+        "ELMO1",
+        "FTL",
+        "FXYD2",
+        "GAD2",
+        "GNAS",
+        "GSN",
+        "HOPX"
+      ],
+      "mouse_specific": [
+        "ANKH",
+        "ATF5",
+        "BACE2",
+        "BNIP3",
+        "C2CD4B",
+        "CHGB",
+        "CTSB",
+        "ENTPD3",
+        "GCH1",
+        "GJD2",
+        "GNG12",
+        "GSDMA"
+      ]
+    },
+    "alpha": {
+      "conserved": [
+        "ARX",
+        "CRYBA2",
+        "CTSZ",
+        "FEV",
+        "GADD45G",
+        "GC",
+        "GCG",
+        "GPX3",
+        "HIGD1A",
+        "IRX2",
+        "MAFB",
+        "PCSK2"
+      ],
+      "human_specific": [
+        "ALDH1A1",
+        "B2M",
+        "C2CD4B",
+        "CALY",
+        "CAMK2G",
+        "CHGA",
+        "CHGB",
+        "CLU",
+        "COTL1",
+        "EZR",
+        "F10",
+        "FAP"
+      ],
+      "mouse_specific": [
+        "ACE2",
+        "BASP1",
+        "EDN3",
+        "EEF1A2",
+        "ETV1",
+        "FGL2",
+        "GNAS",
+        "ID1",
+        "ID2",
+        "ID3",
+        "IGSF21",
+        "IRX1"
+      ]
+    },
+    "delta": {
+      "conserved": [
+        "CADM1",
+        "CAMK2B",
+        "CHGB",
+        "EGR1",
+        "FRZB",
+        "GPX3",
+        "HHEX",
+        "ISL1",
+        "LY6H",
+        "MEST",
+        "PCP4",
+        "PEG10"
+      ],
+      "human_specific": [
+        "ADGRL2",
+        "ANK1",
+        "AQP3",
+        "ASB4",
+        "BCHE",
+        "BMP5",
+        "CALB1",
+        "CALY",
+        "CBLN4",
+        "CD9",
+        "ECEL1",
+        "EDN3"
+      ],
+      "mouse_specific": [
+        "ABCC8",
+        "ACHE",
+        "ADAM22",
+        "AMBP",
+        "ARG1",
+        "BMP3",
+        "BTG2",
+        "CD24",
+        "CDH2",
+        "CLMP",
+        "CLU",
+        "CPA2"
+      ]
+    }
+  }
+}

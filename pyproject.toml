@@ -1,0 +1,16 @@
+[project]
+name = "cross-species-scrna"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "igraph>=1.0.0",
+    "ipykernel>=7.3.0",
+    "leidenalg>=0.12.0",
+    "matplotlib>=3.11.0",
+    "pybiomart>=0.2.0",
+    "scanpy>=1.11.5",
+    "scib-metrics>=0.5.9",
+    "scvi-tools>=1.4.2",
+]
