@@ -34,11 +34,23 @@ uv run python -c "import scanpy, scvi; print('ok')"
 ## Layout
 \`\`\`
 data/      raw + processed datasets (gitignored)
-src/       pipeline scripts (run from scratch, not notebooks)
+src/       pipeline scripts + reusable modules (orthologs.py, prep.py, config.py)
+tests/     unit tests for the reusable pieces (pytest)
 results/   figures, metrics, latent embeddings
 notes/     working notes and teaching write-ups
 INTERVIEW.md   the real deliverable - every design decision + my own answer
 \`\`\`
+
+## Ortholog mapping (the crux, made reusable)
+Human and mouse don't share a gene list, and their symbols differ mainly by casing (`INS` vs `Ins1`), so a case-blind `set(human) & set(mouse)` intersection silently returns almost nothing — the classic afternoon-eating trap. The 1:1 mapping is therefore factored into a small, dependency-light module ([`src/orthologs.py`](src/orthologs.py), pandas + numpy only) that the pipeline imports and that is unit-tested on its own:
+
+- `one_to_one_orthologs(hom_file)` — reads an MGI homology table and returns strictly 1:1 human↔mouse symbol pairs; homology groups with many members on either side are excluded, not arbitrarily resolved.
+- `restrict_to_measured(pairs, human_genes, mouse_genes)` — intersects with the genes actually measured in each dataset, dropping any symbol that becomes multi-partner.
+
+```bash
+uv run python src/orthologs.py --hom-file data/raw/HOM_MouseHumanSequence.rpt  # sanity-check a table
+uv run pytest                                                                  # unit tests for the mapping
+```
 
 ## Reproducibility
 Seeds set in every script. Compute stated per run. Dependencies pinned in uv.lock.
