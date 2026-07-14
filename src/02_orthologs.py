@@ -13,48 +13,25 @@ types present in both species. Raw counts are preserved (scVI needs them downstr
 Robustness: the homology table is read from a local cached file (static fallback). A live
 biomart query is NOT required and the pipeline never hangs on a flaky network call.
 """
-import numpy as np
 import pandas as pd
 import anndata as ad
 
 import config as C
+from orthologs import one_to_one_orthologs, restrict_to_measured
 
 HOM_FILE = C.RAW / "HOM_MouseHumanSequence.rpt"
 
 
-def one_to_one_orthologs():
-    """Return a DataFrame with columns [human, mouse]: 1:1 ortholog symbol pairs."""
-    df = pd.read_csv(HOM_FILE, sep="\t", dtype=str)
-    df = df[["DB Class Key", "Common Organism Name", "Symbol"]].dropna()
-    df["Symbol"] = df["Symbol"].str.strip()
-    is_h = df["Common Organism Name"].str.startswith("human")
-    is_m = df["Common Organism Name"].str.startswith("mouse")
-
-    # count members per homology group per species
-    grp = df.assign(sp=np.where(is_h, "human", np.where(is_m, "mouse", "other")))
-    grp = grp[grp["sp"] != "other"]
-    counts = grp.groupby(["DB Class Key", "sp"]).size().unstack(fill_value=0)
-    one2one_keys = counts[(counts.get("human", 0) == 1) & (counts.get("mouse", 0) == 1)].index
-
-    sub = grp[grp["DB Class Key"].isin(one2one_keys)]
-    pivot = sub.pivot_table(index="DB Class Key", columns="sp", values="Symbol", aggfunc="first")
-    pairs = pivot.dropna().reset_index(drop=True)[["human", "mouse"]]
-    return pairs
-
-
 def main():
-    pairs = one_to_one_orthologs()
+    pairs = one_to_one_orthologs(HOM_FILE)
     print(f"1:1 ortholog pairs in homology table: {len(pairs)}")
 
     human = ad.read_h5ad(C.PROC / "human_raw.h5ad")
     mouse = ad.read_h5ad(C.PROC / "mouse_raw.h5ad")
 
-    hset, mset = set(human.var_names), set(mouse.var_names)
-    keep = pairs[pairs["human"].isin(hset) & pairs["mouse"].isin(mset)].copy()
-    # STRICT 1:1 -- drop ANY symbol that appears more than once on either side (keep=False),
-    # instead of arbitrarily keeping the first. A symbol with multiple partners is not
-    # one-to-one, so it is excluded entirely rather than silently resolved.
-    keep = keep.drop_duplicates(subset="human", keep=False).drop_duplicates(subset="mouse", keep=False)
+    # STRICT 1:1 -- restrict to genes measured in BOTH datasets, dropping any
+    # symbol that ends up with multiple partners rather than silently resolving it.
+    keep = restrict_to_measured(pairs, human.var_names, mouse.var_names)
     print(f"1:1 orthologs measured in BOTH datasets: {len(keep)}")
 
     # --- the case-trap sanity guard: a real ortholog space is thousands, not tens ---

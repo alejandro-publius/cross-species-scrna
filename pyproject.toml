@@ -1,7 +1,7 @@
 [project]
 name = "cross-species-scrna"
 version = "0.1.0"
-description = "Add your description here"
+description = "Cross-species (human/mouse) islet scRNA-seq integration over a 1:1 ortholog gene space, with a from-scratch VAE and scVI."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -14,3 +14,13 @@ dependencies = [
     "scib-metrics>=0.5.9",
     "scvi-tools>=1.4.2",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# src/ holds the pipeline modules (imported flat, e.g. `import orthologs`)
+pythonpath = ["src"]
