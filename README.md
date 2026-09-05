@@ -1,5 +1,7 @@
 # Cross-Species Single-Cell RNA-seq Integration
 
+[![CI](https://github.com/alejandro-publius/cross-species-scrna/actions/workflows/ci.yml/badge.svg)](https://github.com/alejandro-publius/cross-species-scrna/actions/workflows/ci.yml)
+
 A learning project: build, from scratch and then with production tooling, a model that
 integrates **human and mouse** pancreatic-islet single-cell RNA-seq into a shared latent
 space, then uses that space to separate **conserved** from **species-specific** cell types
