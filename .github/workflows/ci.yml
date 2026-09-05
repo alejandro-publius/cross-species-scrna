@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      # Deliberately not `uv sync`: the lock pulls scvi-tools and torch, which
+      # is minutes and a gigabyte, and tests/ exercises only the ortholog
+      # mapping in src/orthologs.py, which needs pandas. The full pipeline is
+      # reproduced by run_all.sh, not by CI.
+      - name: Install what the tests import
+        run: pip install pandas numpy pytest
+
+      - name: Test
+        run: python -m pytest -q
