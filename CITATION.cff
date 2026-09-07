@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: >-
+  This is a personal learning project, not a publication. If you build on the
+  ortholog-mapping module or the pipeline structure, a citation is appreciated
+  but not required.
+title: "cross-species-scrna: Human-Mouse Pancreatic-Islet scRNA-seq Integration"
+type: software
+authors:
+  - family-names: "Alex"
+repository-code: "https://github.com/alejandro-publius/cross-species-scrna"
+license: MIT
+version: 0.1.0
+date-released: "2026-09-04"

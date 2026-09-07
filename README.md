@@ -1,6 +1,8 @@
 # Cross-Species Single-Cell RNA-seq Integration
 
 [![CI](https://github.com/alejandro-publius/cross-species-scrna/actions/workflows/ci.yml/badge.svg)](https://github.com/alejandro-publius/cross-species-scrna/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](pyproject.toml)
 
 A learning project: build, from scratch and then with production tooling, a model that
 integrates **human and mouse** pancreatic-islet single-cell RNA-seq into a shared latent
@@ -9,6 +11,25 @@ and gene programs.
 
 > This is a personal learning project. Nothing here implies affiliation with, or work
 > performed for, any organization. Results are framed as association, not mechanism.
+
+![scVI shared latent space, colored by species (left) and cell type (right)](results/scvi_umap.png)
+*Left: species should mix within clusters (integration worked). Right: cell types should stay
+distinct (biology wasn't destroyed). See [Results](#results) below for the numbers behind this.*
+
+## Quickstart
+Verified from a fresh clone on this Mac (Python 3.11 via `uv`):
+```bash
+uv sync                                               # install pinned deps
+uv run python -c "import scanpy, scvi; print('ok')"   # smoke-test the environment
+uv run pytest                                         # unit tests for the ortholog mapping (5 passed)
+```
+That installs and validates the environment; it does **not** touch the network or run the
+pipeline. `./run_all.sh` additionally downloads real data — the Baron GSE84133 CSVs (~29 MB,
+NCBI) and the MGI homology table (~15 MB) — then trains the VAE, scVI, and contrastive models;
+each stage prints its own expected wall-clock estimate as it runs. Every pipeline script now
+fails with a one-line message telling you which earlier script to run first, instead of a raw
+traceback, if a required input is missing. The `results/` committed in this repo (below) are
+from a completed run; the full write-up is [`results/poster.html`](results/poster.html).
 
 ## Why this exists
 I come from classical ML (XGBoost, random forest, SHAP) on microbiome and bulk expression
@@ -54,5 +75,39 @@ uv run python src/orthologs.py --hom-file data/raw/HOM_MouseHumanSequence.rpt  #
 uv run pytest                                                                  # unit tests for the mapping
 ```
 
+## Results
+From the completed run committed in `results/` (`eval_report.json`, `contrastive_report.json`,
+`conserved_vs_specific.csv`) — full write-up in [`results/poster.html`](results/poster.html),
+[`SUMMARY.md`](SUMMARY.md), and Q&A form in [`CHEATSHEET.md`](CHEATSHEET.md):
+
+**Human → mouse cell-type label transfer** (kNN trained on human labels, evaluated on held-out
+mouse cells; "shuffled" is the label-shuffle negative control):
+
+| Representation | Accuracy | Balanced accuracy | Shuffled balanced accuracy |
+|---|---|---|---|
+| PCA (unintegrated baseline) | 0.877 | 0.752 | 0.140 |
+| scVI (species as batch) | 0.965 | 0.903 | 0.103 |
+| Supervised contrastive (human-labeled, mouse held out) | 0.940 | 0.911 | 0.079 |
+
+**Integration quality** (scib-metrics aggregate scores):
+
+| Representation | Batch correction | Bio conservation | Total |
+|---|---|---|---|
+| PCA (unintegrated) | 0.285 | 0.754 | 0.566 |
+| scVI | 0.561 | 0.742 | 0.670 |
+
+**Conserved vs species-specific marker genes** — one row per shared cell type in
+[`results/conserved_vs_specific.csv`](results/conserved_vs_specific.csv); e.g. beta cells: 19
+conserved / 31 human-specific / 31 mouse-specific markers (Jaccard 0.235), macrophage: 25 / 25 /
+25 (Jaccard 0.333).
+
+The shuffled-label negative control collapsing to chance (~0.08–0.14 balanced accuracy for 10
+shared cell types) is what makes the non-shuffled numbers above trustworthy rather than an
+artifact of leakage. See `SUMMARY.md` for the full honest-limitations discussion (local mixing
+is modest, strict 1:1 orthologs drop `INS`, balanced accuracy < raw accuracy on rare types).
+
 ## Reproducibility
 Seeds set in every script. Compute stated per run. Dependencies pinned in uv.lock.
+
+See [`CHANGELOG.md`](CHANGELOG.md) for release notes and [`CITATION.cff`](CITATION.cff) if you
+want to cite this repo.
