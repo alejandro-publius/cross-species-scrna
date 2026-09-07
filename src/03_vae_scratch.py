@@ -39,7 +39,8 @@ LR = 1e-3
 
 
 def set_seed(s):
-    np.random.seed(s); torch.manual_seed(s)
+    np.random.seed(s)
+    torch.manual_seed(s)
 
 
 class VAE(nn.Module):
@@ -121,9 +122,13 @@ def main():
             recon = nb_nll(xb_cnt, mu, theta).mean()
             kl = kl_standard_normal(mu_z, logvar_z).mean()
             loss = recon + kl                     # = -ELBO
-            opt.zero_grad(); loss.backward(); opt.step()
+            opt.zero_grad()
+            loss.backward()
+            opt.step()
             bs = xb_log.shape[0]
-            tot_r += recon.item() * bs; tot_k += kl.item() * bs; n += bs
+            tot_r += recon.item() * bs
+            tot_k += kl.item() * bs
+            n += bs
         history["recon"].append(tot_r / n)
         history["kl"].append(tot_k / n)
         history["elbo"].append(-(tot_r + tot_k) / n)
@@ -141,10 +146,16 @@ def main():
     fig, ax = plt.subplots(1, 2, figsize=(10, 4))
     ax[0].plot(history["recon"], label="reconstruction (NB NLL)")
     ax[0].plot(history["kl"], label="KL")
-    ax[0].set_xlabel("epoch"); ax[0].set_ylabel("loss"); ax[0].legend(); ax[0].set_title("VAE loss terms")
-    ax[1].plot(history["elbo"], color="k"); ax[1].set_xlabel("epoch"); ax[1].set_ylabel("ELBO")
+    ax[0].set_xlabel("epoch")
+    ax[0].set_ylabel("loss")
+    ax[0].legend()
+    ax[0].set_title("VAE loss terms")
+    ax[1].plot(history["elbo"], color="k")
+    ax[1].set_xlabel("epoch")
+    ax[1].set_ylabel("ELBO")
     ax[1].set_title("ELBO (higher = better)")
-    fig.tight_layout(); fig.savefig(C.RESULTS / "vae_loss_curve.png", dpi=120)
+    fig.tight_layout()
+    fig.savefig(C.RESULTS / "vae_loss_curve.png", dpi=120)
     print(f"\nWrote {C.RESULTS/'vae_loss_curve.png'} and {C.PROC/'joint_vae.h5ad'}")
 
 

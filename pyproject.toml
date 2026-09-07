@@ -18,9 +18,21 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pytest>=9.1.1",
+    # pinned exactly (not >=): ruff's default rule set has changed between minor
+    # versions, and this must match the version pinned in .github/workflows/ci.yml
+    # and .pre-commit-config.yaml so `ruff check .` gives the same answer everywhere.
+    "ruff==0.15.21",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 # src/ holds the pipeline modules (imported flat, e.g. `import orthologs`)
 pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+# The Colab notebook is exploratory/stretch-goal (Phase 5, scGPT) and uses
+# notebook conventions (installs in one cell, imports in the next) that don't
+# map cleanly onto module-level lint rules like E402.
+exclude = ["notebooks"]
