@@ -25,11 +25,20 @@ jobs:
           python-version: "3.12"
 
       # Deliberately not `uv sync`: the lock pulls scvi-tools and torch, which
-      # is minutes and a gigabyte, and tests/ exercises only the ortholog
-      # mapping in src/orthologs.py, which needs pandas. The full pipeline is
+      # is minutes and a gigabyte. tests/test_orthologs.py and tests/test_config.py
+      # only need pandas/numpy; tests/test_prep.py additionally needs scanpy and
+      # skips itself here (see its importorskip) rather than pulling it in. Run
+      # `uv sync && uv run pytest` locally for full coverage. The full pipeline is
       # reproduced by run_all.sh, not by CI.
+      #
+      # ruff is version-pinned (matching .pre-commit-config.yaml): its default
+      # rule set has changed between minor versions, so an unpinned `pip install
+      # ruff` can pass locally and fail in CI (or vice versa) for no code reason.
       - name: Install what the tests import
-        run: pip install pandas numpy pytest
+        run: pip install pandas numpy pytest "ruff==0.15.21"
+
+      - name: Lint
+        run: ruff check .
 
       - name: Test
         run: python -m pytest -q

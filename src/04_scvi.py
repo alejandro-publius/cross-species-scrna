@@ -11,7 +11,6 @@ species offset, land in the same region of z. That is the alignment.
 
 Output: adata.obsm['X_scVI'] (the shared latent space) + UMAPs colored by species and cell type.
 """
-import numpy as np
 import scanpy as sc
 import scvi
 import matplotlib
@@ -42,7 +41,8 @@ def main():
     fig, ax = plt.subplots(1, 2, figsize=(13, 5))
     sc.pl.umap(adata, color="species", ax=ax[0], show=False, title="scVI latent — by species\n(want: well mixed)")
     sc.pl.umap(adata, color="cell_type", ax=ax[1], show=False, title="scVI latent — by cell type\n(want: distinct)")
-    fig.tight_layout(); fig.savefig(C.RESULTS / "scvi_umap.png", dpi=120)
+    fig.tight_layout()
+    fig.savefig(C.RESULTS / "scvi_umap.png", dpi=120)
 
     model.save(str(C.PROC / "scvi_model"), overwrite=True)
     adata.write(C.PROC / "joint_scvi.h5ad")

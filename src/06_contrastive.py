@@ -38,7 +38,8 @@ TAU = 0.1
 
 
 def set_seed(s):
-    np.random.seed(s); torch.manual_seed(s)
+    np.random.seed(s)
+    torch.manual_seed(s)
 
 
 class Encoder(nn.Module):
@@ -104,12 +105,16 @@ def main():
     opt = torch.optim.Adam(enc.parameters(), lr=LR)
 
     for epoch in range(EPOCHS):
-        enc.train(); tot = n = 0
+        enc.train()
+        tot = n = 0
         for xb, yb in loader:
             z = enc(xb)
             loss = supcon_loss(z, yb)
-            opt.zero_grad(); loss.backward(); opt.step()
-            tot += loss.item() * xb.shape[0]; n += xb.shape[0]
+            opt.zero_grad()
+            loss.backward()
+            opt.step()
+            tot += loss.item() * xb.shape[0]
+            n += xb.shape[0]
         if (epoch + 1) % 20 == 0:
             print(f"  epoch {epoch+1:3d}  supcon_loss={tot/n:.4f}")
 
