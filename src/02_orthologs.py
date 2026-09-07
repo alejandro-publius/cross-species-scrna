@@ -23,6 +23,11 @@ HOM_FILE = C.RAW / "HOM_MouseHumanSequence.rpt"
 
 
 def main():
+    C.require(HOM_FILE, "Run `uv run python src/00_download.py` first to fetch the MGI "
+                         "mouse<->human homology table (~15 MB) into data/raw/.")
+    C.require(C.PROC / "human_raw.h5ad", "Run `uv run python src/01_load_data.py` first.")
+    C.require(C.PROC / "mouse_raw.h5ad", "Run `uv run python src/01_load_data.py` first.")
+
     pairs = one_to_one_orthologs(HOM_FILE)
     print(f"1:1 ortholog pairs in homology table: {len(pairs)}")
 
