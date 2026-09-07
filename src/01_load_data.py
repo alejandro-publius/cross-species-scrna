@@ -6,10 +6,8 @@ counts. We build one AnnData per species holding raw counts in X, with per-cell 
 (cell_type, species, donor). Gene symbols are kept in their native casing (human UPPER, mouse
 Title) -- the ortholog step (02) is where we reconcile them, NOT here.
 """
-import gzip
 import numpy as np
 import pandas as pd
-import scanpy as sc
 import anndata as ad
 from scipy import sparse
 
@@ -48,6 +46,10 @@ def load_species(files, species):
 
 
 def main():
+    for f in C.HUMAN_FILES + C.MOUSE_FILES:
+        C.require(C.RAW / f, "Run `uv run python src/00_download.py` first to fetch the "
+                              "Baron GSE84133 CSVs (~29 MB) into data/raw/.")
+
     print("HUMAN:")
     human = load_species(C.HUMAN_FILES, "human")
     print("MOUSE:")

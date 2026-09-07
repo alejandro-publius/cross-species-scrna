@@ -44,3 +44,17 @@ SHARED_CELLTYPES = [
 
 # ---- processed outputs ----
 JOINT_RAW = PROC / "joint_raw.h5ad"          # human+mouse, shared ortholog gene space, raw counts
+
+
+def require(path: Path, hint: str) -> Path:
+    """Fail fast with an actionable message instead of a deep traceback.
+
+    Every pipeline stage consumes files written by an earlier stage. If one is
+    missing (most commonly: the raw data was never downloaded, since that step
+    needs a real network call and isn't run in CI), raise a short, direct error
+    that says exactly which command to run instead of letting pandas/h5py/etc.
+    surface an opaque FileNotFoundError several frames deep.
+    """
+    if not path.exists():
+        raise SystemExit(f"Missing required input: {path}\n  -> {hint}")
+    return path

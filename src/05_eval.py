@@ -84,6 +84,7 @@ def conserved_analysis(adata):
 
 
 def main():
+    C.require(C.PROC / "joint_scvi.h5ad", "Run `uv run python src/04_scvi.py` first.")
     adata = ad.read_h5ad(C.PROC / "joint_scvi.h5ad")
     # unintegrated baseline representation: PCA on the log-normalized data
     sc.pp.pca(adata, n_comps=10, random_state=C.SEED)

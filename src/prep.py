@@ -7,7 +7,6 @@ identical feature set and the comparison is fair.
 - select 2000 highly variable genes with batch_key='species' so the HVG choice is not biased
   toward the species with more cells
 """
-import numpy as np
 import scanpy as sc
 import anndata as ad
 
@@ -17,6 +16,9 @@ N_HVG = 2000
 
 
 def get_data():
+    C.require(C.JOINT_RAW, "Run `uv run python src/02_orthologs.py` first (after "
+                            "00_download.py and 01_load_data.py) to build the shared "
+                            "ortholog gene space.")
     a = ad.read_h5ad(C.JOINT_RAW)
     a.layers["counts"] = a.X.copy()  # raw UMI counts preserved
     # HVG on raw counts (seurat_v3 expects counts), fair across species
