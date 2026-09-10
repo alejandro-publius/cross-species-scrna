@@ -1,3 +1,20 @@
+Metadata-Version: 2.4
+Name: cross-species-scrna
+Version: 0.1.0
+Summary: Cross-species (human/mouse) islet scRNA-seq integration over a 1:1 ortholog gene space, with a from-scratch VAE and scVI.
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: igraph>=1.0.0
+Requires-Dist: ipykernel>=7.3.0
+Requires-Dist: leidenalg>=0.12.0
+Requires-Dist: matplotlib>=3.11.0
+Requires-Dist: pybiomart>=0.2.0
+Requires-Dist: scanpy>=1.11.5
+Requires-Dist: scib-metrics>=0.5.9
+Requires-Dist: scvi-tools>=1.4.2
+Dynamic: license-file
+
 # Cross-Species Single-Cell RNA-seq Integration
 
 [![CI](https://github.com/alejandro-publius/cross-species-scrna/actions/workflows/ci.yml/badge.svg)](https://github.com/alejandro-publius/cross-species-scrna/actions/workflows/ci.yml)
@@ -21,7 +38,7 @@ Verified from a fresh clone on this Mac (Python 3.11 via `uv`):
 ```bash
 uv sync                                               # install pinned deps
 uv run python -c "import scanpy, scvi; print('ok')"   # smoke-test the environment
-uv run pytest                                         # unit tests for the ortholog mapping (14 passed)
+uv run pytest                                         # unit tests for the ortholog mapping (5 passed)
 ```
 That installs and validates the environment; it does **not** touch the network or run the
 pipeline. `./run_all.sh` additionally downloads real data — the Baron GSE84133 CSVs (~29 MB,
