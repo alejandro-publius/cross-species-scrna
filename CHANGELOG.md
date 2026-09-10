@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- The README's quickstart said `pytest` yields `(5 passed)`; the suite is 14.
+  Corrected, and a new test now derives the number by collecting the suite in
+  a subprocess and compares it against every docs line stating a pytest count,
+  so the next added test either updates the README or reds CI.
+
+## [Unreleased]
+
 ### Added
 - `config.require()` guard clauses so `01_load_data.py`, `02_orthologs.py`, `prep.get_data()`
   (used by `03`/`04`/`06`), and `05_eval.py` fail with a one-line actionable message pointing

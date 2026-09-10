@@ -1,0 +1,14 @@
+LICENSE
+README.md
+pyproject.toml
+src/config.py
+src/orthologs.py
+src/prep.py
+src/cross_species_scrna.egg-info/PKG-INFO
+src/cross_species_scrna.egg-info/SOURCES.txt
+src/cross_species_scrna.egg-info/dependency_links.txt
+src/cross_species_scrna.egg-info/requires.txt
+src/cross_species_scrna.egg-info/top_level.txt
+tests/test_config.py
+tests/test_orthologs.py
+tests/test_prep.py
